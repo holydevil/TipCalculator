@@ -7,15 +7,19 @@
 //
 
 #import "TipViewController.h"
+#import "SettingsViewController.h"
 
 @interface TipViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *billTextField;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *tipControl;
+@property  NSNumberFormatter *currencyFormatter;
 
 - (IBAction)onTap:(id)sender;
 @end
+
+int cachedSelection = -1;
 
 @implementation TipViewController
 
@@ -34,10 +38,38 @@
     [super viewDidLoad];
     
     //change keyboard to a numeric keypad
-    [self.billTextField setKeyboardType:UIKeyboardTypeNumberPad];
+    [self.billTextField setKeyboardType:UIKeyboardTypeDecimalPad];
     
+    // set focus on inpout value
     [self.billTextField becomeFirstResponder];
+    
+    //
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:@selector(onSettingsButton)];
 
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    NSLog(@"viewWillAppear");
+    if (cachedSelection >=0) {
+        // Don't change value if user has a value selected
+        [self.tipControl setSelectedSegmentIndex: cachedSelection];
+        
+    } else {
+        //once the view loads, load the default settings value (if any)
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        int intValue = [defaults integerForKey:@"defaultTip"];
+        //set the tip contorl to that value
+        [self.tipControl setSelectedSegmentIndex: intValue];
+    }
+    
+    [self updateView];
+    
+}
+
+
+- (void) onSettingsButton {
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    [self.navigationController pushViewController:settingsViewController animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -45,6 +77,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 - (void) updateView {
     float bill, tip, total;
@@ -70,13 +103,14 @@
     
     //do the math
     total = bill + tip;
+
+    NSNumberFormatter *currencyFormatter = [[NSNumberFormatter alloc]init];
+    [currencyFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [currencyFormatter setLocale:[NSLocale currentLocale]];
     
-    //change the label of total to bill+tip
-    NSLog(@"values are, bill = %f, tip = %f, total = %f", bill, tip, total);
+    self.totalLabel.text = [currencyFormatter stringFromNumber:[NSNumber numberWithFloat:total]];
+    self.tipLabel.text = [currencyFormatter stringFromNumber:[NSNumber numberWithFloat:tip]];
     
-    //set both labels with calculated values
-    self.totalLabel.text = [NSString stringWithFormat:@"$%.2f",total];
-    self.tipLabel.text = [NSString stringWithFormat:@"$%.2f",tip];
 }
 
 - (IBAction)onTap:(id)sender {
@@ -88,6 +122,9 @@
 
 - (IBAction)tipControlChanged:(id)sender {
     [self updateView];
+    
+    //cache the value
+    cachedSelection = [self.tipControl selectedSegmentIndex];
     
     //hide keyboard
     [self.view endEditing:YES];
