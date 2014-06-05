@@ -117,16 +117,11 @@
 		D4A9CE3E193EE2160027B1FD /* tipCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				D4A9CE71194003B00027B1FD /* ViewControllers */,
 				D4A9CE47193EE2160027B1FD /* AppDelegate.h */,
 				D4A9CE48193EE2160027B1FD /* AppDelegate.m */,
 				D4A9CE4A193EE2160027B1FD /* Images.xcassets */,
 				D4A9CE3F193EE2160027B1FD /* Supporting Files */,
-				D4A9CE67193EE22A0027B1FD /* TipViewController.h */,
-				D4A9CE68193EE22A0027B1FD /* TipViewController.m */,
-				D4A9CE6C193FEC460027B1FD /* SettingsViewController.h */,
-				D4A9CE6D193FEC460027B1FD /* SettingsViewController.m */,
-				D4A9CE6E193FEC460027B1FD /* SettingsViewController.xib */,
-				D4A9CE69193EE22A0027B1FD /* TipViewController.xib */,
 			);
 			path = tipCalculator;
 			sourceTree = "<group>";
@@ -158,6 +153,19 @@
 				D4A9CE5A193EE2160027B1FD /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D4A9CE71194003B00027B1FD /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				D4A9CE67193EE22A0027B1FD /* TipViewController.h */,
+				D4A9CE68193EE22A0027B1FD /* TipViewController.m */,
+				D4A9CE6C193FEC460027B1FD /* SettingsViewController.h */,
+				D4A9CE6D193FEC460027B1FD /* SettingsViewController.m */,
+				D4A9CE6E193FEC460027B1FD /* SettingsViewController.xib */,
+				D4A9CE69193EE22A0027B1FD /* TipViewController.xib */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

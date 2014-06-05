@@ -10,6 +10,8 @@
 
 @interface SettingsViewController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *defaultTipControl;
+@property NSUserDefaults *defaults;
+
 - (IBAction)tipControlChanged:(id)sender;
 
 @end
@@ -30,14 +32,18 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 
-    //once the view loads, load the default settings value (if any)
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    int intValue = [defaults integerForKey:@"defaultTip"];
-    if (intValue) {
-        //set the tip contorl to that value
-        [self.defaultTipControl setSelectedSegmentIndex: intValue];
-    }
+    [self setupDefaults];
 
+    
+}
+
+- (void) setupDefaults {
+    //load the default settings values (if any)
+    self.defaults = [NSUserDefaults standardUserDefaults];
+    int intValue = [self.defaults integerForKey:@"defaultTip"];
+    
+    //set the tip contorl to that value
+    [self.defaultTipControl setSelectedSegmentIndex: intValue];
     
 }
 
@@ -48,16 +54,16 @@
 }
 
 - (void) saveSettings {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     //get the selected value
     int tip = [self.defaultTipControl selectedSegmentIndex];
+    
     //convert it
     NSString *tipString = [NSString stringWithFormat:@"%d",tip];
     
-    [defaults setObject:tipString forKey:@"defaultTip"];
+    [self.defaults setObject:tipString forKey:@"defaultTip"];
     
     //imp. don't forget to synchronize (save in other words)
-    [defaults synchronize];
+    [self.defaults synchronize];
 }
 
 - (IBAction)tipControlChanged:(id)sender {

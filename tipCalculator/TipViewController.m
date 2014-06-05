@@ -33,17 +33,27 @@ int cachedSelection = -1;
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
+
+- (void) setupDefaults {
+
     //change keyboard to a numeric keypad
     [self.billTextField setKeyboardType:UIKeyboardTypeDecimalPad];
     
     // set focus on inpout value
     [self.billTextField becomeFirstResponder];
     
-    //
+    //setup l10n
+    self.currencyFormatter = [[NSNumberFormatter alloc]init];
+    [self.currencyFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+    [self.currencyFormatter setLocale:[NSLocale currentLocale]];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    [self setupDefaults];
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:@selector(onSettingsButton)];
 
 }
@@ -103,13 +113,9 @@ int cachedSelection = -1;
     
     //do the math
     total = bill + tip;
-
-    NSNumberFormatter *currencyFormatter = [[NSNumberFormatter alloc]init];
-    [currencyFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    [currencyFormatter setLocale:[NSLocale currentLocale]];
     
-    self.totalLabel.text = [currencyFormatter stringFromNumber:[NSNumber numberWithFloat:total]];
-    self.tipLabel.text = [currencyFormatter stringFromNumber:[NSNumber numberWithFloat:tip]];
+    self.totalLabel.text = [self.currencyFormatter stringFromNumber:[NSNumber numberWithFloat:total]];
+    self.tipLabel.text = [self.currencyFormatter stringFromNumber:[NSNumber numberWithFloat:tip]];
     
 }
 
